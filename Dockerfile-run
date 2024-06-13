@@ -1,0 +1,22 @@
+FROM python:3.12-alpine
+
+RUN apk add --no-cache gcc python3-dev musl-dev linux-headers
+
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+COPY nlp.py .
+COPY templates/ templates/
+COPY delete_model_endpoint.py .
+
+ENV PYTHONPATH "${PYTHONPATH}:/usr/src/app"
+
+EXPOSE 5000
+
+ENTRYPOINT ["python3", "-m", "flask", "--app", "nlp", "run", "--host=0.0.0.0"]
+
