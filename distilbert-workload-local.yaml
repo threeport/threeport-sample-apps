@@ -1,4 +1,0 @@
-Workload:
-  Name: distilbert
-  YAMLDocument: distilbert-manifest-local.yaml
-

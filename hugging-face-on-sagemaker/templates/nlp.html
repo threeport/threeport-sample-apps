@@ -25,7 +25,7 @@
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="{{ url_for('static',filename='images/favicon.ico') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='images/favicon.ico') }}">
 
 </head>
 <body>
@@ -35,19 +35,28 @@
   <div class="container">
     <div class="row" style="margin-top: 5%">
       <div class="twelve columns">
-        <h1>Natural Language Processing Sample</h1>
+        <h1>DistilBERT Sample App</h1>
       </div>
       <div class="eight columns">
 
-        <h4>Question</h4>
-        <p>{{ form_data.question }}</p>
+        <p>Hi!  I'm running on a Kubernetes cluster somewhere.  When I started, I deployed
+        a trained model from HuggingFace called <a
+        href="https://huggingface.co/distilbert/distilbert-base-uncased-distilled-squad">
+        distilbert/distilbert-base-uncased-distilled-squad</a> to AWS SageMaker.</p>
 
-        <h4>Context</h4>
-        <p>{{ form_data.context }}</p>
+        <p>Enter a question with its context.  We'll use that HuggingFace model to generate an
+        answer.</p>
 
-        <h4>Response</h4>
-        <p>Answer: {{ answer }}</p>
-        <p>Certainty: {{ certainty }}</p>
+        <form action="/answer/" method="post">
+            <label for="question">Question</label>
+            <input type="text" id="question" name="question" size="50">
+            <br><br>
+            <label for="context">Context</label>
+            <textarea id="context" name="context" rows="4" cols="50">My Name is Philipp and I live in Nuremberg. This model is used with sagemaker for inference. I play chess in my spare time.</textarea>
+            <br><br>
+            <input type="submit" value="Get Answer" class="button-primary">
+          </div>
+        </form>
       </div>
     </div>
   </div>
