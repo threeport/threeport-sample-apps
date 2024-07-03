@@ -1,0 +1,108 @@
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: distilbert
+#---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: aws-creds-03
+#  #namespace: distilbert
+#type: Opaque
+#data:
+#  aws-region: "dXMtZWFzdC0y"
+#  aws-access-key-id: "QUtJQVlNRU5QWEM1Q0lKNlpIWUs="
+#  aws-secret-access-key: "bTFlaTEraldKankveGN3dlJIemZNa2JzUkxneC9nSGg0SWpKeXRqcw=="
+#---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: distilbert
+  labels:
+    app: distilbert
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: distilbert
+  template:
+    metadata:
+      labels:
+        app: distilbert
+    spec:
+      restartPolicy: Always
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      initContainers:
+      - name: deploy-model
+        image: richlander2k2/distilbert-deploy:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: shared-data
+          mountPath: /shared-data
+        env:
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds-03
+              key: aws-region
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds-03
+              key: aws-access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds-03
+              key: aws-secret-access-key
+      containers:
+      - name: distilbert
+        image: richlander2k2/distilbert-run:latest
+        imagePullPolicy: Always
+        lifecycle:
+          preStop:
+            exec:
+              command: ["python3", "/usr/src/app/delete_model_endpoint.py"]
+        volumeMounts:
+        - name: shared-data
+          mountPath: /shared-data
+        ports:
+        - name: http
+          containerPort: 5000
+        env:
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds-03
+              key: aws-region
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds-03
+              key: aws-access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds-03
+              key: aws-secret-access-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: distilbert
+  #namespace: distilbert
+spec:
+  selector:
+    app: distilbert
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: http
+

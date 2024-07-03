@@ -1,0 +1,20 @@
+Workload:
+  Name: distilbert
+  YAMLDocument: distilbert-manifest-remote.yaml
+  DomainName:
+    Name: qleet-net
+    Domain: qleet.net
+    Zone: Public
+    AdminEmail: richard@qleet.io
+  Gateway:
+    Name: web-service-gateway
+    HttpPorts:
+      - Port: 80
+        HTTPSRedirect: true
+        Path: "/"
+      - Port: 443
+        TLSEnabled: true
+        Path: "/"
+    ServiceName: distilbert
+    SubDomain: distilbert
+
