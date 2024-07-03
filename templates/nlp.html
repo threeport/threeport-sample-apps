@@ -1,22 +1,63 @@
 <!doctype html>
-<title>Natural Language Processing Demo</title>
+<html lang="en">
+<head>
 
-<h1>Natural Language Processing Demo</h1>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Natural Languange Processing Sample</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-<p>Hi!  I'm running on a Kubernetes cluster somewhere.  When I started, I deployed
-a trained model from HuggingFace called <a
-href="https://huggingface.co/distilbert/distilbert-base-uncased-distilled-squad">
-distilbert/distilbert-base-uncased-distilled-squad</a> to AWS SageMaker.</p>
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<p>Enter a question with its context.  We'll use that HuggingFace model to generate an
-answer.</p>
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<form action="/answer" method="post">
-    <label for="question">Question</label><br>
-    <input type="text" id="question" name="question"><br><br>
-    <label for="context">Context</label><br>
-    <textarea id="context" name="context" rows="4" cols="50">My Name is Philipp and I live in Nuremberg. This model is used with sagemaker for inference. I play chess in my spare time.</textarea>
-    <br><br>
-    <input type="submit" value="Get Answer">
-</form>
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/normalize.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/skeleton.css') }}">
 
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='images/favicon.ico') }}">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row" style="margin-top: 5%">
+      <div class="twelve columns">
+        <h1>Natural Language Processing Sample</h1>
+      </div>
+      <div class="eight columns">
+
+        <p>Hi!  I'm running on a Kubernetes cluster somewhere.  When I started, I deployed
+        a trained model from HuggingFace called <a
+        href="https://huggingface.co/distilbert/distilbert-base-uncased-distilled-squad">
+        distilbert/distilbert-base-uncased-distilled-squad</a> to AWS SageMaker.</p>
+
+        <p>Enter a question with its context.  We'll use that HuggingFace model to generate an
+        answer.</p>
+
+        <form action="/answer/" method="post">
+            <label for="question">Question</label>
+            <input type="text" id="question" name="question" size="50">
+            <br><br>
+            <label for="context">Context</label>
+            <textarea id="context" name="context" rows="4" cols="50">My Name is Philipp and I live in Nuremberg. This model is used with sagemaker for inference. I play chess in my spare time.</textarea>
+            <br><br>
+            <input type="submit" value="Get Answer" class="button-primary">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>

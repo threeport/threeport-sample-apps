@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY nlp.py .
 COPY templates/ templates/
+COPY static/ static/
 COPY delete_model_endpoint.py .
 
 ENV PYTHONPATH "${PYTHONPATH}:/usr/src/app"

@@ -1,15 +1,54 @@
 <!doctype html>
-<title>Natural Language Processing Demo</title>
+<html lang="en">
+<head>
 
-<h1>Natural Language Processing Demo</h1>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Natural Languange Processing Sample</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-<h2>Question</h2>
-<p>{{ form_data.question }}</p>
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<h2>Context</h2>
-<p>{{ form_data.context }}</p>
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<h2>Response</h2>
-<p>Answer: {{ answer }}</p>
-<p>Certainty: {{ certainty }}</p>
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/normalize.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/skeleton.css') }}">
 
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="{{ url_for('static',filename='images/favicon.ico') }}">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row" style="margin-top: 5%">
+      <div class="twelve columns">
+        <h1>Natural Language Processing Sample</h1>
+      </div>
+      <div class="eight columns">
+
+        <h4>Question</h4>
+        <p>{{ form_data.question }}</p>
+
+        <h4>Context</h4>
+        <p>{{ form_data.context }}</p>
+
+        <h4>Response</h4>
+        <p>Answer: {{ answer }}</p>
+        <p>Certainty: {{ certainty }}</p>
+      </div>
+    </div>
+  </div>
+</body>

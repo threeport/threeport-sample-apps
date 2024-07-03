@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, request, render_template, request
 
 import boto3
 import json
@@ -10,13 +10,19 @@ app = Flask(__name__)
 def nlp():
     return render_template('nlp.html')
 
-@app.route("/answer/", methods=['POST'])
+@app.route("/answer/", methods=['GET', 'POST'])
 def answer():
-    form_data = request.form
-    response = get_response(form_data['question'], form_data['context'])
+    form_data = {}
+    question = request.form.get("question")
+    context = request.form.get("context")
+    form_data["question"] = question
+    form_data["context"] = context
+
+    response = get_response(question, context)
     resp_data = json.loads(response)
     answer = resp_data['answer']
     certainty = f"{resp_data['score']:.0%}"
+
     return render_template(
         'answer.html',
         form_data=form_data,
