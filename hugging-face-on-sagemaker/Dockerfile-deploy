@@ -1,5 +1,7 @@
 FROM python:3.12-alpine
 
+LABEL org.opencontainers.image.source="https://github.com/threeport/threeport-samples-apps"
+
 RUN apk add --no-cache gcc python3-dev musl-dev linux-headers
 
 RUN mkdir /usr/src/app

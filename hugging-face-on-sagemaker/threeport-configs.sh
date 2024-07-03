@@ -110,8 +110,7 @@ spec:
         emptyDir: {}
       initContainers:
       - name: deploy-model
-        #image: ghcr.io/threeport-samples/distilbert-deploy:v0.1.0
-        image: richlander2k2/distilbert-deploy:latest
+        image: ghcr.io/threeport/distilbert-deploy:v0.1.0
         imagePullPolicy: Always
         volumeMounts:
         - name: shared-data
@@ -134,8 +133,7 @@ spec:
               key: aws-secret-access-key
       containers:
       - name: distilbert
-        #image: ghcr.io/threeport-samples/distilbert-run:v0.1.0
-        image: richlander2k2/distilbert-run:latest
+        image: ghcr.io/threeport/distilbert-run:v0.1.0
         imagePullPolicy: Always
         lifecycle:
           preStop:
