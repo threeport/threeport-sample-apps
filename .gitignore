@@ -1,3 +1,6 @@
 __pycache__
 distilbert-secret-definition.yaml
+distilbert-manifest.yaml
+distilbert-secret-instance.yaml
+distilbert-workload.yaml
 
