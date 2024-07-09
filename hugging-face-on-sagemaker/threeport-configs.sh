@@ -4,6 +4,7 @@ HELP="Generate configs for distilbert app.
 Usage: \r
 ./threeport-configs.sh \ \r
     <AWS region> \ \r
+    <AWS Principal for role assumption> \ \r
     <AWS access key ID> \ \r
     <AWS secret access key> \ \r
     <AWS Secret Manager name> \ \r
@@ -12,11 +13,12 @@ Usage: \r
 "
 
 REGION=$1
-ACCESS_KEY_ID=$2
-SECRET_ACCESS_KEY=$3
-SECRET_NAME=$4
-DNS=$5
-RUNTIME=$6
+AWS_PRINCIPAL=$2
+ACCESS_KEY_ID=$3
+SECRET_ACCESS_KEY=$4
+SECRET_NAME=$5
+DNS=$6
+RUNTIME=$7
 
 # ensure all args are passed in
 for arg in "$REGION" "$ACCESS_KEY_ID" "$SECRET_ACCESS_KEY" "$SECRET_NAME" "$DNS" "$RUNTIME"; do
@@ -30,6 +32,7 @@ done
 # check inputs
 echo "These are your inputs:"
 echo "AWS region: $REGION"
+echo "AWS principal: $AWS_PRINCIPAL"
 echo "AWS access key ID: $ACCESS_KEY_ID" | sed -E 's/(:....).*/\1***/'
 echo "AWS secret access key: $SECRET_ACCESS_KEY" | sed -E 's/(:....).*/\1***/'
 echo "AWS Secret Manager secret name: $SECRET_NAME"
@@ -131,6 +134,11 @@ spec:
             secretKeyRef:
               name: "${SECRET_NAME}"
               key: aws-secret-access-key
+        - name: AWS_ROLE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: aws-role
+              key: aws-role-name
       containers:
       - name: distilbert
         image: ghcr.io/threeport/distilbert-run:v0.1.0
@@ -161,6 +169,18 @@ spec:
             secretKeyRef:
               name: "${SECRET_NAME}"
               key: aws-secret-access-key
+        - name: AWS_ROLE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: aws-role
+              key: aws-role-name
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-role
+data:
+  aws-role-name: distilbert_sagemaker_role
 ---
 apiVersion: v1
 kind: Service
@@ -178,6 +198,20 @@ spec:
     port: 443
     protocol: TCP
     targetPort: http
+EOF
+
+cat > terraform/terraform.tfvars <<EOF
+region = "${REGION}"
+principal = "${AWS_PRINCIPAL}"
+EOF
+
+cat > distilbert-terraform.yaml <<EOF
+Terraform:
+  Name: distilbert-iam-role
+  ConfigDir: terraform
+  VarsDocument: terraform/terraform.tfvars
+  AwsAccount:
+    Name: default-account
 EOF
 
 echo "Configs generated"

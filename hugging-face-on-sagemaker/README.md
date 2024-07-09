@@ -21,6 +21,10 @@ SageMaker inference models and endpoints.
 The example below uses:
 
 * The `us-east-2` region.
+* A fictional user ARN for the AWS principal that will assume the role used to
+  provision the SageMaker model and endpoint.  You can provide a user ARN, role
+  ARN or any other principal documented in the [AWS
+  docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
 * An AWS Secret Manager secret name `aws-creds-00`.  Note: AWS Secret Manager
   reserves names for secrets for a period after deleteion.  So use a unique name
   that hasn't been used recently.
@@ -36,12 +40,24 @@ export AWS_ACCESS_KEY_ID=[access key ID]
 export AWS_SECRET_ACCESS_KEY=[secret access key]
 ./threeport-configs.sh \
     us-east-2 \
+    arn:aws:iam::123456789012:user/pat@example.com \
     $AWS_ACCESS_KEY_ID \
     $AWS_SECRET_ACCESS_KEY \
     aws-creds-00 \
-    qleet.net \
+    example.com \
     threeport-demo
 ```
+
+Create the AWS role that will be assumed by the distilBERT app to provision AWS
+SageMaker models and endpoints.  This uses Threeport Terraform support.
+
+```bash
+tptctl create terraform -c distilbert-terraform.yaml
+```
+
+Terraform object reconciliation will take a few minutes.  You can check your AWS
+console.  When the `distilbert_sagemaker_role` in IAM is available, you are all
+set to proceed.
 
 Create secret definition for AWS credentials.  This step puts those AWS
 credentials in AWS Secret Manager.
@@ -85,6 +101,12 @@ Remove the AWS credentials from AWS Secret Manager.
 
 ```bash
 tptctl delete secret-definition -n aws-creds-00
+```
+
+Remove the IAM role used by the app to manage SageMaker.
+
+```
+tptctl delete terraform-instance -n distilbert-iam-role
 ```
 
 ## Development

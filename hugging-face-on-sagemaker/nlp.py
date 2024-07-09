@@ -34,13 +34,41 @@ def get_response(question, context):
     region = os.environ['AWS_DEFAULT_REGION'].rstrip()
     access_key_id = os.environ['AWS_ACCESS_KEY_ID'].rstrip()
     secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY'].rstrip()
+    aws_role_name = os.environ['AWS_ROLE_NAME'].rstrip()
+
+    # get execution role
+    iam = boto3.client(
+        'iam',
+        region_name=region,
+        aws_access_key_id=access_key_id,
+        aws_secret_access_key=secret_access_key,
+    )
+    role = iam.get_role(RoleName=aws_role_name)['Role']['Arn']
+
+    print(f"sagemaker role arn: {role}")
+
+    # assume role and get credentials
+    sts = boto3.client(
+        'sts',
+        region_name=region,
+        aws_access_key_id=access_key_id,
+        aws_secret_access_key=secret_access_key,
+    )
+    assumed_role = sts.assume_role(
+        RoleArn=role,
+        RoleSessionName="distilbert-session",
+    )
+    credentials = assumed_role['Credentials']
 
     # create a low-level client representing Amazon SageMaker runtime
     sagemaker_runtime = boto3.client(
         "sagemaker-runtime",
         region_name=region,
-        aws_access_key_id=access_key_id,
-        aws_secret_access_key=secret_access_key,
+        #aws_access_key_id=access_key_id,
+        #aws_secret_access_key=secret_access_key,
+        aws_access_key_id=credentials['AccessKeyId'],
+        aws_secret_access_key=credentials['SecretAccessKey'],
+        aws_session_token=credentials['SessionToken'],
     )
 
     # retrieve the SageMaker endpoint from the shared volume

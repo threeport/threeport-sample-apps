@@ -1,6 +1,11 @@
-__pycache__
-distilbert-secret-definition.yaml
-distilbert-manifest.yaml
-distilbert-secret-instance.yaml
-distilbert-workload.yaml
-
+*__pycache__
+hugging-face-on-sagemaker/distilbert-secret-definition.yaml
+hugging-face-on-sagemaker/distilbert-manifest.yaml
+hugging-face-on-sagemaker/distilbert-secret-instance.yaml
+hugging-face-on-sagemaker/distilbert-workload.yaml
+hugging-face-on-sagemaker/distilbert-role.yaml
+hugging-face-on-sagemaker/distilbert-terraform.yaml
+*terraform.tfstate
+*terraform.tfstate.backup
+*terraform.tfvars
+*.terraform*
